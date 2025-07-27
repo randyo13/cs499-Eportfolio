@@ -1,0 +1,313 @@
+from dash import Dash
+
+# Configure the necessary Python module imports for dashboard components
+import dash_leaflet as dl
+from dash import dcc
+from dash import html
+import plotly.express as px
+from dash import dash_table
+from dash.dependencies import Input, Output
+import base64
+
+# Configure OS routines
+import os
+
+# Configure the plotting routines
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+#### FIX ME #####
+# Change animal_shelter and AnimalShelter to match your CRUD Python module file name and class name
+from animal_shelter import AnimalShelter
+
+###########################
+# Data Manipulation / Model
+###########################
+# FIX ME: Update with your username and password and CRUD Python module name
+
+username = "aacuser"
+password = "SNHU1234"
+
+# Connect to database via CRUD Module
+db = AnimalShelter()
+
+# Class read method must support return of list object and accept projection json input
+# Sending the read method an empty document requests all documents be returned
+initial_data = db.read({})
+df = pd.DataFrame.from_records(initial_data)
+
+# MongoDB v5+ is going to return the '_id' column and that is going to have an 
+# invlaid object type of 'ObjectID' - which will cause the data_table to crash - so we remove
+# it in the dataframe here. The df.drop command allows us to drop the column. If we do not set
+# inplace=True - it will reeturn a new dataframe that does not contain the dropped column(s)
+if '_id' in df.columns:
+    df.drop(columns=['_id'], inplace=True)
+
+## Debug
+# print(len(df.to_dict(orient='records')))
+# print(df.columns)
+
+#########################
+# Dashboard Layout / View
+#########################
+app = Dash(__name__)
+
+# FIX ME: Add in Grazioso Salvare’s logo
+#image_filename = 'Grazioso Salvare Logo.png'  # Replace with your own image
+#encoded_image = base64.b64encode(open(image_filename, 'rb').read())
+
+#FIX ME: Place the HTML image tag in the line below into the app.layout code according to your design
+#FIX ME: Also remember to include a unique identifier such as your name or date
+#html.Img(src='data:image/png;base64,{}'.format(encoded_image.decode()))
+app.layout = html.Div([
+    # HTML Div containing the dashboard title
+    html.Center(html.B(html.H1('Randy Ortiz - CS-340 Dashboard'))),
+    html.Hr(),
+    #html.Div(   ---------- # Commented out image, did not have file
+        #html.Img(src='data:image/png;base64,{}'.format(encoded_image.decode()), style={'height': '100px'}) 
+   #),
+    html.Hr(),
+    # Interactive filtering options
+    html.Div([
+        html.Label("Filter by Rescue Type:"),
+        dcc.RadioItems(
+            id='filter-type',
+            options=[
+                {'label': 'Water Rescue', 'value': 'Water Rescue'},
+                {'label': 'Mountain Rescue', 'value': 'Mountain Rescue'},
+                {'label': 'Disaster Tracking', 'value': 'Disaster Tracking'},
+                {'label': 'Reset', 'value': 'Reset'}
+            ],
+            value='Reset',
+            labelStyle={'display': 'inline-block'}
+        )
+    ]),
+    html.Hr(),
+    # Data table setup
+    dash_table.DataTable(
+        id='datatable-id',
+        columns=[{"name": i, "id": i, "deletable": False, "selectable": True} for i in df.columns],
+        data=df.to_dict('records'),
+        page_size=10,
+        style_table={'overflowX': 'auto'},
+        filter_action="native",
+        sort_action="native",
+        row_selectable="single",  # Allow row selection
+    ),
+    html.Br(),
+    html.Hr(),
+    # chart and geolocation chart layout
+    html.Div(
+        className='row',
+        style={'display': 'flex', 'flexWrap': 'wrap'},  # Wrap flex items
+        children=[
+
+            html.Div(
+                id='graph-id',
+                className='col s12 m6',
+                style={'height': '400px', 'flex': '1 1 45%'}  # Use flex and fixed height of graph
+            ),
+            html.Div(
+                id='map-id',
+                className='col s12 m6',
+                style={'height': '400px', 'flex': '1 1 45%'}  # Use flex and fixed height for map
+            )
+        ]
+    )
+])
+
+#############################################
+# Interaction Between Components / Controller
+#############################################
+
+
+
+
+# ----------------------------
+# ----------------------------------------------------------------------------------------------------------------- Helper Functions
+# ----------------------------
+
+def get_selected_row(view_data, selected_rows):
+    """
+---------------------------------------------------------------------------------  ENHANCEMENT:    Saftely extracts the selected row from view_data.
+---------------------------------------------------------------------------------  ENHANCEMENT:  Returns the first row if nothing is selected.
+    """
+
+    if not view_data or len(view_data) == 0:
+        return None # No data available
+
+    df = pd.DataFrame(view_data)
+
+    if not selected_rows:
+        return df.iloc[0] # Default to first row
+    else:
+        return df.iloc[selected_rows[0]]
+
+
+def generate_map(lat, lon, breed, name):
+    """
+---------------------------------------------------------------------------------- ENHANCEMENT:   Returns a dash_leaflet map with a marker and popup.
+    """
+    return dl.Map(
+        style={'width': '100%', 'height': '500px'},
+        center=[lat, lon],
+        zoom=10,
+        children=[
+            dl.TileLayer(),
+            dl.Marker(
+                position=[lat, lon],
+                children=[
+                    dl.Tooltip(breed),
+                    dl.Popup(name)
+                ]
+            )
+        ]
+    )
+
+
+# Callback to filter the data table based on the selected rescue type
+@app.callback(
+    Output('datatable-id', 'data'),
+    [Input('filter-type', 'value')]
+)
+def update_dashboard(filter_type):
+## FIX ME Add code to filter interactive data table with MongoDB queries
+#
+#        
+#        columns=[{"name": i, "id": i, "deletable": False, "selectable": True} for i in df.columns]
+#        data=df.to_dict('records')
+#       
+#       
+#        return (data,columns)
+
+# Display the breeds of animal based on quantity represented in
+# the data table
+
+    # Filter data table with MongoDB queries
+    if filter_type == 'Reset': 
+        filtered_data = db.read({})
+    else:
+        filtered_data = db.read({'rescue_type': filter_type})
+
+    # Ensure the returned data is not None
+    if filtered_data is None:
+        return []
+
+    filtered_df = pd.DataFrame.from_records(filtered_data)
+    if '_id' in filtered_df.columns:
+        filtered_df.drop(columns=['_id'], inplace=True)
+    return filtered_df.to_dict('records')
+
+
+# Display the breeds of animal based on categorized age groups
+@app.callback(
+    Output('graph-id', "children"),
+    [Input('datatable-id', "derived_virtual_data")]
+)
+def update_graphs(viewData):
+    ###FIX ME ####
+    # add code for chart of your choice (e.g. pie chart) #
+
+    #return [
+    #    dcc.Graph(            
+    #        figure = px.pie(df, names='breed', title='Preferred Animals')
+    #    )    
+    #]
+    
+#This callback will highlight a cell on the data table when the user selects it
+
+
+    if viewData is None or len(viewData) == 0:
+        return []  # No output if no data
+    
+    df = pd.DataFrame(viewData)
+    
+    # required columns exist
+    if 'breed' not in df.columns or 'age_upon_outcome_in_weeks' not in df.columns:
+        return [html.P("Required columns are missing in the data.", style={'color': 'red'})]
+    
+    df['age_upon_outcome_in_weeks'] = pd.to_numeric(df['age_upon_outcome_in_weeks'], errors='coerce')
+    # Bin age into categories
+    bins = [0, 10, 20, 30, 40, 50, 100, 200, 500]  # bin ranges defined
+    labels = ['0-10', '10-20', '20-30', '30-40', '40-50', '50-100', '100-200', '200+']
+    df['age_group'] = pd.cut(df['age_upon_outcome_in_weeks'], bins=bins, labels=labels, right=False)
+    
+# Count the occurrences of breeds for age groups
+    grouped = df.groupby(['breed', 'age_group']).size().reset_index(name='count')
+
+# Create bar graph showing counts of breeds by age group
+    grouped = grouped[grouped['count'] > 0]  # Filter out zeros
+
+# 🔧 Fix: Convert age_group to string so Plotly uses different colors
+    grouped['age_group'] = grouped['age_group'].astype(str)
+
+    fig = px.bar(
+        grouped,
+        y='breed',
+        x='count',
+        color='age_group',
+        title="Animal Breeds by Age Group",
+        labels={'count': 'Count', 'breed': 'Breed', 'age_group': 'Age Group (Weeks)'},
+        orientation='h',
+        text='count',
+        category_orders={'age_group': labels}  # Ensure color mapping is consistent
+)
+
+    
+    # Update layout to make the graph scrollable
+    fig.update_layout(
+        barmode='stack', 
+        yaxis=dict(title="Breed", automargin=True),  # Add margin for long breed names
+        xaxis_title="Number of Animals",
+        height=1200,  # Increase graph height for more space
+        margin=dict(l=200, r=50, t=50, b=50),  # Add left margin for long breed names
+        legend_title="Age Groups",
+    )
+    
+    return [
+        html.Div(
+            dcc.Graph(figure=fig),
+            style={'overflowY': 'scroll', 'height': '600px'}  # Make graph scrollable
+        )
+    ]
+
+
+
+
+# This callback will update the geo-location chart for the selected data entry
+# derived_virtual_data will be the set of data available from the datatable in the form of 
+# a dictionary.
+# derived_virtual_selected_rows will be the selected row(s) in the table in the form of
+# a list. For this application, we are only permitting single row selection so there is only
+# one value in the list.
+# The iloc method allows for a row, column notation to pull data from the datatable
+@app.callback(
+    Output('map-id', "children"),
+    [Input('datatable-id', "derived_virtual_data"),
+     Input('datatable-id', "derived_virtual_selected_rows")]
+)
+def update_map(viewData, selected_rows):
+    row = get_selected_row(viewData, selected_rows)
+
+    if row is None:
+        return [html.P("No data available.", style={'color': 'red'})]
+
+    # Ensure required columns exist
+    if 'location_lat' not in row or 'location_long' not in row:
+        return [html.P("Location data is missing in the selected row.", style={'color': 'red'})]
+        
+# ENHANCEMENT: Added try block to handle invalid or missing lat/lon values 
+    
+    try:
+        lat = float(row['location_lat'])
+        lon = float(row['location_long'])
+        breed = row.get('breed', 'Unknown')
+        name = row.get('name', 'Unknown')
+        return [generate_map(lat, lon, breed, name)]
+    except Exception as e:
+        return [html.P(f"Error generating map: {str(e)}", style={'color': 'red'})]
+
+
+# Run the app
+app.run(port=8551)
