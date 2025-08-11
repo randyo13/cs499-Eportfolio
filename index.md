@@ -8,7 +8,7 @@ Welcome to my Computer Science Capstone ePortfolio. This showcases my final arti
 
 # Artifact Sections
 
-### [Software Design & Engineering – Animal Rescue Dashboard](SoftwareDesign_AnimalRescueDashboard/)
+### [Software Design & Engineering – Animal Rescue Dashboard (Enhanced)](SoftwareDesign_AnimalRescueDashboard/)
 Refactored UI logic into helper functions and improved error handling.
 
 ### [Algorithms and Data Structures – Farkle Dice Game (Enhanced)](FarkleGame_Enhanced/)
