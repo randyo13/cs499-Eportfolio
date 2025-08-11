@@ -14,5 +14,5 @@ Refactored UI logic into helper functions and improved error handling.
 ### [Algorithms and Data Structures – Farkle Dice Game (Enhanced)](FarkleGame_Enhanced/)
 Refactored scoring logic into modular functions, implemented hot dice reroll handling, and improved input buffer management for smoother gameplay.
 
-### Databases – Reinforcement Learning Project *In Progress*
-Planned MongoDB integration to store training metrics such as loss and win rate.
+### [Databases – Reinforcement Learning Pirate Agent (Enhanced)](PirateAgent_Enhanced/)
+Integrated MongoDB to store training metrics such as loss, win rate, and session duration, enabling data analysis for performance improvements.
