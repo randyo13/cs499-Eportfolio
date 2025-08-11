@@ -11,8 +11,8 @@ Welcome to my Computer Science Capstone ePortfolio. This showcases my final arti
 ### [Software Design & Engineering – Animal Rescue Dashboard](SoftwareDesign_AnimalRescueDashboard/)
 Refactored UI logic into helper functions and improved error handling.
 
-### Algorithms & Data Structures – Farkle Dice Game *In Progress*
-Modularized scoring logic, fixed hot dice reroll logic input buffer issues.
+### [Algorithms and Data Structures – Farkle Dice Game (Enhanced)](FarkleGame_Enhanced/)
+Refactored scoring logic into modular functions, implemented hot dice reroll handling, and improved input buffer management for smoother gameplay.
 
 ### Databases – Reinforcement Learning Project *In Progress*
 Planned MongoDB integration to store training metrics such as loss and win rate.
