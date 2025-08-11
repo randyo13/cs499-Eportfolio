@@ -1,0 +1,56 @@
+Overview:
+
+Develop a program that follows the rules of Farkle as described. On program start-up, it shall display the 
+rules to the user as read from a text file submitted with the program. The user can then set up the game 
+by entering the number of players. Any number below two shall ask the user to add more players. Once 
+gameplay has started, rolling the dice should be performed using a random number generator for each 
+of the six dice. After each player's roll, the score should be calculated based on selected scoring dice. 
+Validate that the selection is valid and determine whether a reroll is allowed. Continue playing until a 
+player reaches 10,000 points. Display a message declaring the winner.
+
+
+Game Summary:
+
+Farkle is a multiplayer dice game with a minimum of two players and no upper limit. The goal is to reach 
+10,000 points first.
+
+
+Points:
+
+- A roll of a 1 is worth 100 points.
+- A roll of a 5 is worth 50 points.
+- Three of the same number rolled at the same time is worth 100x the face value.
+  Example: three 2s = 200 points, three 5s = 500 points.
+- Exception: three 1s = 1,000 points.
+
+
+The Play:
+
+- On a turn, a player rolls all six dice.
+- Set aside any point dice (1s, 5s, or three of a kind).
+- The player may reroll the remaining dice to earn more points or stop and bank their score.
+- A "Farkle" occurs if no scoring dice are rolled. The player loses all points for that turn.
+- If a player uses all six dice as scoring dice in one turn, they must roll all six again before stopping.
+- The play continues to the left.
+
+
+Entering the Game:
+
+- A player must earn at least 1,000 points in a single turn before they officially enter the game.
+- Until that happens, no points are recorded.
+- After entering, a player may stop rolling at any time during their turns.
+
+
+Strategy Tip:
+
+- Players are not required to set aside all scoring dice.
+- For example, keeping a 1 and rerolling a 5 may help set up a three-of-a-kind.
+- At least one scoring die must be kept per roll.
+
+
+Winning:
+
+- A player must reach or exceed 10,000 points to trigger the final round.
+- All other players get one final turn to beat that score.
+- If no one succeeds, the player who crossed 10,000 wins.
+- If someone beats that score, they win instead.
