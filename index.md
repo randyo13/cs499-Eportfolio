@@ -22,11 +22,11 @@ Through these projects, I developed the ability to evaluate existing code, ident
 
 ## Artifact Sections
 
-### [Software Design & Engineering – Animal Rescue Dashboard (Enhanced)](https://github.com/YourUsername/cs499-eportfolio/tree/main/SoftwareDesign_AnimalRescueDashboard)
+### [Software Design & Engineering – Animal Rescue Dashboard (Enhanced)](https://github.com/randyo13/cs499-eportfolio/tree/main/SoftwareDesign_AnimalRescueDashboard)
 Refactored UI logic into helper functions, added input validation, and improved error handling.
 
-### [Algorithms & Data Structures – Farkle Dice Game (Enhanced)](https://github.com/YourUsername/cs499-eportfolio/tree/main/FarkleGame_Enhanced)
+### [Algorithms & Data Structures – Farkle Dice Game (Enhanced)](https://github.com/randyo13/cs499-eportfolio/tree/main/FarkleGame_Enhanced)
 Refactored scoring logic into modular functions, implemented hot dice reroll handling, and fixed input buffer management issues for smoother gameplay.
 
-### [Databases – Reinforcement Learning Pirate Agent (Enhanced)](https://github.com/YourUsername/cs499-eportfolio/tree/main/PirateAgent_Enhanced)
+### [Databases – Reinforcement Learning Pirate Agent (Enhanced)](https://github.com/randyo13/cs499-eportfolio/tree/main/PirateAgent_Enhanced)
 Integrated MongoDB to store training metrics such as loss, win rate, and session duration, enabling data analysis for performance improvements.
