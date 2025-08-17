@@ -13,7 +13,7 @@ Description:
 data for the Farkle game. Each Player object tracks its score and whether the player has
 officially entered the game by scoring 1000 points or more in a single turn.
 
-    The class provides methods to get and update the player’s score and entry status. These
+    The class provides methods to get and update the playerâ€™s score and entry status. These
 methods are used by the Game class to determine turn outcomes, manage scoring, and enforce
 game entry rules.
 
